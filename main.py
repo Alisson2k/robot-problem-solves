@@ -13,6 +13,6 @@ chromo = Chromosome(matrix)
 
 # print(matrix.cans_indexed)
 
-available_chromosome(matrix, chromo)
+available_chromosome(chromo)
 
 # Criar função de avaliação, essa vai modificar o cromossomo, para tornar o caminho válido

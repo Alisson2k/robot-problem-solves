@@ -7,7 +7,6 @@ class Matrix(object):
         self.content = self._init_matrix()
         self.cans = []
         self.cans_indexed = []
-        self.robot_position = (0, 0)
 
     def _init_matrix(self):
         matrix = [[0 for x in range(self.size)] for y in range(self.size)]
@@ -38,7 +37,7 @@ class Matrix(object):
 
             return can_place
 
-        for i in range(qnt_cans):
+        for _ in range(qnt_cans):
             while True:
                 x = randrange(self.size)
                 y = randrange(self.size)

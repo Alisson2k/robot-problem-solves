@@ -3,10 +3,10 @@ from matrix import Matrix
 
 class Chromosome(object):
     def __init__(self, matrix: Matrix):
-        self.field = matrix.content
-        self.cans = matrix.cans
+        self.matrix = matrix
         self.points_sorted = matrix.cans_indexed
         self.genes = self._create_genes()
+        self.robot_position = (0, 0)
 
     def _create_genes(self):
         genes = []

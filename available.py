@@ -2,16 +2,16 @@ from matrix import Matrix
 from chromosome import Chromosome
 from constants import Axis, PRIORITY_AXIS
 
-def available_chromosome(matrix: Matrix, chromosome: Chromosome):
+def available_chromosome(chromosome: Chromosome):
     total_path = []
 
     for gen in chromosome.genes:
-        ini = matrix.robot_position
+        ini = chromosome.robot_position
         fim = chromosome.points_sorted[gen]
 
-        paths = get_paths_taken(matrix, ini, fim)
+        paths = get_paths_taken(chromosome.matrix, ini, fim)
 
-        matrix.robot_position = paths[len(paths) - 1]
+        chromosome.robot_position = paths[len(paths) - 1]
         total_path.append(paths)
 
 def get_paths_taken(matrix: Matrix, initial: tuple, final: tuple):
