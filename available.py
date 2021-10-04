@@ -3,36 +3,64 @@ from chromosome import Chromosome
 from constants import Axis, PRIORITY_AXIS
 
 def available_chromosome(matrix: Matrix, chromosome: Chromosome):
-    # estou na posicao 0, 0
-    get_paths_taken(matrix, (0, 0), (3, 3))
+    total_path = []
 
-    print("retorna o cromossomo avaliado")
-    print(matrix)
-    print(chromosome)
+    for gen in chromosome.genes:
+        ini = matrix.robot_position
+        fim = chromosome.points_sorted[gen]
+
+        paths = get_paths_taken(matrix, ini, fim)
+
+        matrix.robot_position = paths[len(paths) - 1]
+        total_path.append(paths)
 
 def get_paths_taken(matrix: Matrix, initial: tuple, final: tuple):
-    # vertical => initial[0] | final[0]
-    # horizontal => initial[1] | final[1]
+    # validar outros movimentos a partir da matrix,
+    # como por exemplo o último movimento
 
     paths = [initial]
 
-    print(initial, final)
-
-    if PRIORITY_AXIS == Axis.VERTICAL:
-        for i in range(initial[0] + 1, final[0] + 1):
-            paths.append((i, initial[1]))
+    if PRIORITY_AXIS == Axis.HORIZONTAL:
+        if final[1] > initial[1]:
+            _go_down(paths, initial, final)
+        elif initial[1] > final[1]:
+            _go_up(paths, initial, final)
 
         initial = paths[len(paths) - 1]
 
-        for i in range(initial[1] + 1, final[1] + 1):
-            paths.append((i, initial[0]))
+        if final[0] > initial[0]:
+            _go_right(paths, initial, final)
+        elif initial[0] > final[0]:
+            _go_left(paths, initial, final)
     else:
-        for i in range(initial[1] + 1, final[1] + 1):
-            paths.append((initial[0], i))
+        if final[0] > initial[0]:
+            _go_right(paths, initial, final)
+        elif initial[0] > final[0]:
+            _go_left(paths, initial, final)
 
         initial = paths[len(paths) - 1]
 
-        for i in range(initial[0] + 1, final[0] + 1):
-            paths.append((i, initial[1]))
+        if final[1] > initial[1]:
+            _go_down(paths, initial, final)
+        elif initial[1] > final[1]:
+            _go_up(paths, initial, final)
 
-    print(paths)
+    return paths
+
+def _go_down(paths, initial: tuple, final: tuple):
+    for i in range(initial[1] + 1, final[1] + 1):
+        paths.append((initial[0], i))
+
+def _go_right(paths, initial: tuple, final: tuple):
+    for i in range(initial[0] + 1, final[0] + 1):
+        paths.append((i, initial[1]))
+        
+def _go_up(paths, initial: tuple, final: tuple):
+    while final[1] != initial[1]:
+        initial = (initial[0], initial[1] - 1)
+        paths.append((initial[0], initial[1]))
+
+def _go_left(paths, initial: tuple, final: tuple):
+    while final[0] != initial[0]:
+        initial = (initial[0] - 1, initial[1])
+        paths.append((initial[0], initial[1]))
