@@ -10,7 +10,7 @@ class Matrix(object):
 
     def _init_matrix(self):
         matrix = [[0 for x in range(self.size)] for y in range(self.size)]
-        matrix[0][0] = '2'
+        matrix[0][0] = 2
         return matrix
 
     def _create_indexed_array(self):
@@ -49,6 +49,15 @@ class Matrix(object):
 
         self.cans = cans
         self.cans_indexed = self._create_indexed_array()
+
+    def is_void(self, position: tuple) -> bool:
+        return self.content[position[0]][position[1]] == 0
+
+    def is_can(self, position: tuple) -> bool:
+        return self.content[position[0]][position[1]] == 1
+
+    def is_robot(self, position: tuple) -> bool:
+        return self.content[position[0]][position[1]] == 2
 
     def __str__(self):
         return "[ " + ' ]\n[ '.join(['  '.join([str(cell) for cell in row]) for row in self.content]) + " ]"
