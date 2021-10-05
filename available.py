@@ -1,4 +1,3 @@
-from matrix import Matrix
 from chromosome import Chromosome
 from constants import Axis, PRIORITY_AXIS
 
@@ -15,6 +14,15 @@ def available_chromosome(chromosome: Chromosome):
 
         paths = get_paths_taken(chromosome, ini, fim)
         total_path.append(paths)
+
+    return calc_real_path(total_path)
+
+def calc_real_path(paths):
+    for i, path in enumerate(paths):
+        if i > 0:
+            del path[0]
+
+    return [item for sublist in paths for item in sublist]
 
 def get_paths_taken(chromosome: Chromosome, initial: tuple, final: tuple):
     # validar outros movimentos a partir da matrix,
