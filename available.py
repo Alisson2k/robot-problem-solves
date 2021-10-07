@@ -18,17 +18,19 @@ def available_chromosome(chromosome: Chromosome):
     return calc_real_path(total_path)
 
 def calc_real_path(paths):
-    for i, path in enumerate(paths):
-        if i > 0:
-            del path[0]
+    for path in paths:
+        del path[0]
 
     return [item for sublist in paths for item in sublist]
 
 def get_paths_taken(chromosome: Chromosome, initial: tuple, final: tuple):
-    # validar outros movimentos a partir da matrix,
-    # como por exemplo o último movimento
-
     paths = [initial]
+
+    # if chromosome.last_movement is not None:
+    #     next_movement = get_next_movement(chromosome, initial, final)
+
+        # se nao puder fazer o movimento, faça o circulo
+        # lembrando de validar se deve fazer o replace
 
     go_on = True
     if PRIORITY_AXIS == Axis.HORIZONTAL:
@@ -60,12 +62,17 @@ def get_paths_taken(chromosome: Chromosome, initial: tuple, final: tuple):
 
     return paths
 
+def get_next_movement(chromosome: Chromosome, initial: tuple, final: tuple):
+    return 0
+
 def _go_down(chromosome: Chromosome, paths, initial: tuple, final: tuple):
     go_on = True
 
     for i in range(initial[0] + 1, final[0] + 1):
         path = (i, initial[1])
         paths.append(path)
+
+        chromosome.last_movement = paths[len(paths) - 2]
 
         if chromosome.matrix.is_can(path) and path != final:
             replace_movement(chromosome, path, final)
@@ -81,6 +88,8 @@ def _go_right(chromosome: Chromosome, paths, initial: tuple, final: tuple):
     for i in range(initial[1] + 1, final[1] + 1):
         path = (initial[0], i)
         paths.append(path)
+
+        chromosome.last_movement = paths[len(paths) - 2]
 
         if chromosome.matrix.is_can(path) and path != final:
             replace_movement(chromosome, path, final)
@@ -99,6 +108,8 @@ def _go_up(chromosome: Chromosome, paths, initial: tuple, final: tuple):
         path = (initial[0], initial[1])
         paths.append(path)
 
+        chromosome.last_movement = paths[len(paths) - 2]
+
         if chromosome.matrix.is_can(path) and path != final:
             replace_movement(chromosome, path, final)
             go_on = False
@@ -115,6 +126,8 @@ def _go_left(chromosome: Chromosome, paths, initial: tuple, final: tuple):
         initial = (initial[0] - 1, initial[1])
         path = (initial[0], initial[1])
         paths.append(path)
+
+        chromosome.last_movement = paths[len(paths) - 2]
 
         if chromosome.matrix.is_can(path) and path != final:
             replace_movement(chromosome, path, final)

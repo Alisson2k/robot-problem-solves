@@ -7,6 +7,7 @@ class Chromosome(object):
         self.points_sorted = matrix.cans_indexed
         self.genes = self._create_genes()
         self.robot_position: tuple = (0, 0)
+        self.last_movement: tuple = None
 
     def change_robot_position(self, position: tuple):
         self.matrix.content[self.robot_position[0]][self.robot_position[1]] = 0
