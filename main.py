@@ -11,8 +11,14 @@ matrix.generate_cans()
 
 chromo = Chromosome(matrix)
 
-# print(matrix.cans_indexed)
+print(matrix)
 
-available_chromosome(chromo)
+path = available_chromosome(chromo)
+
+print()
+print(chromo)
+
+print("Caminho:", path)
+print("Total:", len(path))
 
 # Criar função de avaliação, essa vai modificar o cromossomo, para tornar o caminho válido

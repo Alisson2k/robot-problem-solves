@@ -1,5 +1,19 @@
 from chromosome import Chromosome
-from constants import Axis, PRIORITY_AXIS
+from constants import Axis, Direction, Wise
+
+class Available(object):
+    def __init__(self):
+        self.axis_priority = Axis.VERTICAL
+        self.wise_priority = Wise.CLOCKWISE
+        self.direction_priority = Direction.RIGHT
+
+    def change_axis_priority(self):
+        if self.axis_priority == Axis.VERTICAL:
+            self.axis_priority = Axis.HORIZONTAL
+        else:
+            self.axis_priority = Axis.VERTICAL
+
+av = Available()
 
 def available_chromosome(chromosome: Chromosome):
     total_path = []
@@ -25,15 +39,56 @@ def calc_real_path(paths):
 
 def get_paths_taken(chromosome: Chromosome, initial: tuple, final: tuple):
     paths = [initial]
+    last_movement = chromosome.last_movement
 
-    # if chromosome.last_movement is not None:
-    #     next_movement = get_next_movement(chromosome, initial, final)
+    while True:
+        get_paths(paths, chromosome, initial, final)
 
-        # se nao puder fazer o movimento, faça o circulo
-        # lembrando de validar se deve fazer o replace
+        if len(paths) > 1 and last_movement == paths[1]:
+            paths = [initial]
 
+            if av.axis_priority == Axis.HORIZONTAL and initial[0] != final[0]:
+                av.axis_priority = Axis.VERTICAL
+            elif av.axis_priority == Axis.VERTICAL and initial[1] != final[1]:
+                av.axis_priority = Axis.HORIZONTAL
+            else:
+                initial = redo_moviment(paths, chromosome, initial, final)
+        else:
+            break
+
+    return paths
+
+def redo_moviment(paths: list, chromosome: Chromosome, initial: tuple, final: tuple):
+    if initial[0] != final[0]:
+        av.axis_priority = Axis.VERTICAL
+
+        if av.direction_priority == Direction.RIGHT:
+            if initial[1] + 1 < chromosome.matrix.size:
+                paths.append((initial[0], initial[1] + 1))
+                return (initial[0], initial[1] + 1)
+            else:
+                paths.append((initial[0], initial[1] - 1))
+                return (initial[0], initial[1] - 1)
+        else:
+            paths.append((initial[0], initial[1] -1))
+            return (initial[0], initial[1] - 1)
+    else:
+        av.axis_priority = Axis.HORIZONTAL
+        
+        if av.direction_priority == Direction.RIGHT:
+            if initial[0] + 1 < chromosome.matrix.size:
+                paths.append((initial[0] + 1, initial[1]))
+                return (initial[0] + 1, initial[1])
+            else:
+                paths.append((initial[0] - 1, initial[1]))
+                return (initial[0] - 1, initial[1])
+        else:
+            paths.append((initial[0] - 1, initial[1]))
+            return (initial[0] - 1, initial[1])
+
+def get_paths(paths: list, chromosome: Chromosome, initial: tuple, final: tuple):
     go_on = True
-    if PRIORITY_AXIS == Axis.HORIZONTAL:
+    if av.axis_priority == Axis.HORIZONTAL:
         if final[1] > initial[1]:
             go_on = _go_right(chromosome, paths, initial, final)
         elif initial[1] > final[1]:
@@ -59,11 +114,6 @@ def get_paths_taken(chromosome: Chromosome, initial: tuple, final: tuple):
                 _go_right(chromosome, paths, initial, final)
             elif initial[1] > final[1]:
                 _go_up(chromosome, paths, initial, final)
-
-    return paths
-
-def get_next_movement(chromosome: Chromosome, initial: tuple, final: tuple):
-    return 0
 
 def _go_down(chromosome: Chromosome, paths, initial: tuple, final: tuple):
     go_on = True
