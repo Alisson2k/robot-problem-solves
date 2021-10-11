@@ -1,10 +1,11 @@
+import copy
 import random
 from matrix import Matrix
 
 class Chromosome(object):
     def __init__(self, matrix: Matrix):
-        self.matrix = matrix
-        self.points_sorted = matrix.cans_indexed
+        self.matrix = copy.deepcopy(matrix)
+        self.points_sorted = self.matrix.cans_indexed
         self.genes = self._create_genes()
         self.robot_position: tuple = (0, 0)
         self.last_movement: tuple = None
