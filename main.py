@@ -1,24 +1,46 @@
+import random
 from matrix import Matrix
-from chromosome import Chromosome
-from available import available_chromosome
+from population import Population
+from constants import EnumCrossover, ELITISM_RATE, MUTATION_RATE
+from selection import roulette_wheel
 
-field_size = 5
+SIZE = 50
+QNT_POPULATION = 10
+EPOCHS = 50
 
-chromos = []
-
-matrix = Matrix(field_size)
+matrix = Matrix(SIZE)
 matrix.generate_cans()
 
-chromo = Chromosome(matrix)
-
 print(matrix)
-
-path = available_chromosome(chromo)
-
 print()
-print(chromo)
 
-print("Caminho:", path)
-print("Total:", len(path))
+population = Population(matrix, QNT_POPULATION)
+# print(population)
 
-# Criar função de avaliação, essa vai modificar o cromossomo, para tornar o caminho válido
+def flatten(population, to_append):
+    for sublist in to_append:
+        population.append(sublist)
+
+for i in range(EPOCHS):
+    new_population = []
+    
+    bests = population.elitism(ELITISM_RATE)
+    
+    selected = roulette_wheel(population)
+
+    news = population.apply_crossover(EnumCrossover.OX)
+    
+    # if random.randint(0, 100) < MUTATION_RATE:
+    #     population.apply_mutation()
+
+    flatten(new_population, selected)
+    flatten(new_population, news)
+
+    new_population = random.choices(population=new_population, k=QNT_POPULATION - len(bests))
+    flatten(new_population, bests)
+
+    population = Population(matrix, QNT_POPULATION, new_population)
+
+best = population.get_best() 
+print(best)
+# print(best.path)

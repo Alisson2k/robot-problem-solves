@@ -7,6 +7,9 @@ class Available(object):
         self.wise_priority = Wise.CLOCKWISE
         self.direction_priority = Direction.RIGHT
 
+    def set_default_props(self):
+        self.__init__()
+
     def change_axis_priority(self):
         if self.axis_priority == Axis.VERTICAL:
             self.axis_priority = Axis.HORIZONTAL
@@ -16,12 +19,13 @@ class Available(object):
 av = Available()
 
 def available_chromosome(chromosome: Chromosome):
-    total_path = []
+    av.set_default_props()
 
     points = []
     for i in range(len(chromosome.genes)):
         points.append(chromosome.points_sorted[chromosome.genes[i]])
 
+    total_path = []
     for gen in chromosome.genes:
         ini = chromosome.robot_position
         fim = chromosome.points_sorted[gen]

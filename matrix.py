@@ -2,11 +2,14 @@ from random import randrange
 from constants import GENERATION_PERCENT
 
 class Matrix(object):
-    def __init__(self, size: int):
+    def __init__(self, size: int, auto_gen_cans: bool = False):
         self.size = size
         self.content = self._init_matrix()
         self.cans = []
         self.cans_indexed = []
+
+        if auto_gen_cans:
+            self.generate_cans()
 
     def _init_matrix(self):
         matrix = [[0 for x in range(self.size)] for y in range(self.size)]

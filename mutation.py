@@ -12,4 +12,4 @@ def mutation_invert(chromo: Chromosome):
     chromo.genes.reverse()
 
 def mutation_random(genes: list):
-    return random.sample(genes, len(genes))
+    random.shuffle(genes)

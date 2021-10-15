@@ -1,4 +1,7 @@
+import os
 from enum import Enum
+
+clear = lambda: os.system('clear')
 
 class Axis(Enum):
     HORIZONTAL = 0
@@ -11,6 +14,11 @@ class Wise(Enum):
 class Direction(Enum):
     RIGHT = 0
     LEFT = 1
+
+class EnumCrossover(Enum):
+    OX = 0
+    PMX = 1
+    CX = 2
 
 # percentage of matrix that must be filled by cans
 GENERATION_PERCENT = 20
@@ -25,4 +33,13 @@ PRIORITY_WISE = Wise.CLOCKWISE
 PRIORITY_DIRECTION = Direction.RIGHT
 
 # ROULETE WHEEL PERCENT LIMITATION
-ROULETE_WHEEL_PERCENT = 25
+ROULETE_WHEEL_PERCENT = 100
+
+# ELITISM RATE (IN PERCENT)
+ELITISM_RATE = 10
+
+# CROSSOVER RATE (IN PERCENT)
+CROSSOVER_RATE = 15
+
+# MUTATION RATE (IN PERCENT)
+MUTATION_RATE = 5

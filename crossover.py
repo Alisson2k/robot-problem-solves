@@ -1,4 +1,5 @@
 import random
+from chromosome import Chromosome
 
 class Crossover:
 
@@ -7,8 +8,11 @@ class Crossover:
         pass
 
     @staticmethod
-    def apply_ox(chromo1, chromo2, p1 = None, p2 = None):
-        size = len(chromo1) - 1
+    def apply_ox(chromo1: Chromosome, chromo2: Chromosome, p1 = None, p2 = None):
+        genes_1 = chromo1.genes
+        genes_2 = chromo2.genes
+        
+        size = len(genes_1) - 1
 
         if p1 is None:
             p1 = random.randint(1, size - 1)
@@ -20,7 +24,7 @@ class Crossover:
 
         child_1 = [None] * (size + 1)
         for i in range(start, end + 1):
-            child_1[i] = chromo1[i]
+            child_1[i] = genes_1[i]
 
         current_index = 0
         for i in range(size + 1):
@@ -32,13 +36,13 @@ class Crossover:
                 continue
 
             j = current_index
-            while chromo2[j] in child_1:
+            while genes_2[j] in child_1:
                 j = (j + 1) % (size + 1)
 
-            child_1[current_index] = chromo2[j]
+            child_1[current_index] = genes_2[j]
 
-            if chromo2[j] not in child_1:
-                child_1[current_index] = chromo2[j]
+            if genes_2[j] not in child_1:
+                child_1[current_index] = genes_2[j]
 
         return child_1
 
