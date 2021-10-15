@@ -11,7 +11,7 @@ class Crossover:
     def apply_ox(chromo1: Chromosome, chromo2: Chromosome, p1 = None, p2 = None):
         genes_1 = chromo1.genes
         genes_2 = chromo2.genes
-        
+
         size = len(genes_1) - 1
 
         if p1 is None:
@@ -44,7 +44,9 @@ class Crossover:
             if genes_2[j] not in child_1:
                 child_1[current_index] = genes_2[j]
 
-        return child_1
+        result = Chromosome(chromo1.init_matrix)
+        result.genes = child_1
+        return result
 
     @staticmethod
     def apply_pmx():

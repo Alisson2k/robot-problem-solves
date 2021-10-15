@@ -1,11 +1,6 @@
-import math
 import random
-from constants import ROULETE_WHEEL_PERCENT
 
 def roulette_wheel(population: list) -> list:
-    size = len(population.population)
-    count = math.ceil(ROULETE_WHEEL_PERCENT * size / 100)
-
     total = 0
     for pop in population.population:
         total += pop.distance
@@ -21,5 +16,5 @@ def roulette_wheel(population: list) -> list:
     return random.choices(
         population=population.population,
         weights=weights,
-        k=count
+        k=2
     )

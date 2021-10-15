@@ -1,22 +1,9 @@
 import copy
 from matrix import Matrix
 from chromosome import Chromosome
-from available import available_chromosome
+from wrapper_chromosome import Wrapper
 from constants import EnumCrossover
 from crossover import Crossover
-
-class Wrapper(object):
-
-    def __init__(self, chromosome: Chromosome):
-        self.chromosome = chromosome
-        self.path = available_chromosome(self.chromosome)
-        self.distance = len(self.path)
-
-    def __lt__(self, other):
-        return self.distance < other.distance
-
-    def __str__(self):
-        return f'(C: {self.chromosome}, D: {self.distance})'
     
 class Population(object):
 

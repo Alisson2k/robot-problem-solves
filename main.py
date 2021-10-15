@@ -1,46 +1,63 @@
 import random
 from matrix import Matrix
 from population import Population
-from constants import EnumCrossover, ELITISM_RATE, MUTATION_RATE
 from selection import roulette_wheel
-
-SIZE = 50
-QNT_POPULATION = 10
-EPOCHS = 50
-
-matrix = Matrix(SIZE)
-matrix.generate_cans()
-
-print(matrix)
-print()
-
-population = Population(matrix, QNT_POPULATION)
-# print(population)
+from crossover import Crossover
+from wrapper_chromosome import Wrapper
+from mutation import mutation_invert, mutation_random
 
 def flatten(population, to_append):
     for sublist in to_append:
         population.append(sublist)
 
-for i in range(EPOCHS):
-    new_population = []
-    
+# Tamanho do problema (matrix)
+MATRIX_SIZE = 25
+
+# Tamanho da população
+POPULATION_SIZE = 50
+
+# Quantidade de gerações
+NUMBER_OF_GENERATIONS = 50
+
+# Chance de mutação
+MUTATION_RATE = 5
+
+# Taxa de elitismo
+ELITISM_RATE = 20
+
+
+# Gera uma matriz inicial
+matrix = Matrix(MATRIX_SIZE, True)
+
+# Gera uma população incial aleatória
+population = Population(matrix, POPULATION_SIZE)
+print(f'[*] Inicialmente: {population.get_best().distance}\n')
+print(matrix)
+print()
+
+# Inicia a seleção natural
+for i in range(NUMBER_OF_GENERATIONS):
+    # Array para próxima geracao
+    next_population = []
+
+    # Seleciona os melhores, elitismo
     bests = population.elitism(ELITISM_RATE)
-    
-    selected = roulette_wheel(population)
 
-    news = population.apply_crossover(EnumCrossover.OX)
-    
-    # if random.randint(0, 100) < MUTATION_RATE:
-    #     population.apply_mutation()
+    # Joga os melhores na proxima geracao
+    flatten(next_population, bests)
 
-    flatten(new_population, selected)
-    flatten(new_population, news)
+    # Até preencher todos os "POPULATION_SIZE", seleciona
+    # dois individuos para fazer crossover
+    # gera um novo, e talvez aplica uma mutacao no gerado
+    while len(next_population) != POPULATION_SIZE:
+        parents = roulette_wheel(population)
+        child = Crossover.apply_ox(parents[0].chromosome, parents[1].chromosome)
 
-    new_population = random.choices(population=new_population, k=QNT_POPULATION - len(bests))
-    flatten(new_population, bests)
+        if random.randint(0, 100) < MUTATION_RATE:
+            # mutation_random(child)
+            mutation_invert(child)
 
-    population = Population(matrix, QNT_POPULATION, new_population)
+        next_population.append(Wrapper(child))
 
-best = population.get_best() 
-print(best)
-# print(best.path)
+    population = Population(matrix, POPULATION_SIZE, next_population)
+    print(f'[{i}] Distancia: {population.get_best().distance}')
