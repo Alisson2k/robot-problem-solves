@@ -2,7 +2,6 @@ import copy
 import time
 from matrix import Matrix
 from constants import clear
-from chromosome import Chromosome
 from wrapper_chromosome import Wrapper
 
 class Visualization(object):
@@ -21,9 +20,8 @@ class Visualization(object):
 
         self.matrix.content[position[0]][position[1]] = 2
 
-    def solution(self, chromosome: Chromosome, delay_in_seconds: int = 0):
+    def solution(self, chromo: Wrapper, delay_in_seconds: int = 0):
         self.__init__(self._initial_matrix)
-        chromo = Wrapper(copy.deepcopy(chromosome))
         chromo.chromosome.robot_position = (0, 0)
 
         clear()

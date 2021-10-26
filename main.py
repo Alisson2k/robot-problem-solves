@@ -1,23 +1,26 @@
+import time
 import random
 from matrix import Matrix
 from population import Population
 from selection import roulette_wheel
 from crossover import Crossover
 from wrapper_chromosome import Wrapper
-from mutation import mutation_invert, mutation_random
+from mutation import mutation_invert
+from utils import read_matrix_by_file
+from visualization import Visualization
 
 def flatten(population, to_append):
     for sublist in to_append:
         population.append(sublist)
 
 # Tamanho do problema (matrix)
-MATRIX_SIZE = 25
+MATRIX_SIZE = 50
 
 # Tamanho da população
-POPULATION_SIZE = 50
+POPULATION_SIZE = 20
 
 # Quantidade de gerações
-NUMBER_OF_GENERATIONS = 50
+NUMBER_OF_GENERATIONS = 500
 
 # Chance de mutação
 MUTATION_RATE = 5
@@ -28,36 +31,53 @@ ELITISM_RATE = 20
 
 # Gera uma matriz inicial
 matrix = Matrix(MATRIX_SIZE, True)
+# matrix = read_matrix_by_file('example.txt')
 
-# Gera uma população incial aleatória
-population = Population(matrix, POPULATION_SIZE)
-print(f'[*] Inicialmente: {population.get_best().distance}\n')
-print(matrix)
-print()
+def resolve():
+    # Gera uma população incial aleatória
+    population = Population(matrix, POPULATION_SIZE)
+    print(f'[*] Inicialmente: {population.get_best().distance}\n')
+    print(matrix)
+    print()
 
-# Inicia a seleção natural
-for i in range(NUMBER_OF_GENERATIONS):
-    # Array para próxima geracao
-    next_population = []
+    # view = Visualization(matrix)
+    # view.solution(population.get_best(), 0.3)
 
-    # Seleciona os melhores, elitismo
-    bests = population.elitism(ELITISM_RATE)
+    # Inicia a seleção natural
+    for i in range(NUMBER_OF_GENERATIONS):
+        # Array para próxima geracao
+        next_population = []
 
-    # Joga os melhores na proxima geracao
-    flatten(next_population, bests)
+        # Seleciona os melhores, elitismo
+        bests = population.elitism(ELITISM_RATE)
 
-    # Até preencher todos os "POPULATION_SIZE", seleciona
-    # dois individuos para fazer crossover
-    # gera um novo, e talvez aplica uma mutacao no gerado
-    while len(next_population) != POPULATION_SIZE:
-        parents = roulette_wheel(population)
-        child = Crossover.apply_ox(parents[0].chromosome, parents[1].chromosome)
+        # Joga os melhores na proxima geracao
+        flatten(next_population, bests)
 
-        if random.randint(0, 100) < MUTATION_RATE:
-            # mutation_random(child)
-            mutation_invert(child)
+        # Até preencher todos os "POPULATION_SIZE", seleciona
+        # dois individuos para fazer crossover
+        # gera um novo, e talvez aplica uma mutacao no gerado
+        while len(next_population) != POPULATION_SIZE:
+            parents = roulette_wheel(population)
+            child = Crossover.apply_ox(parents[0].chromosome, parents[1].chromosome)
 
-        next_population.append(Wrapper(child))
+            if random.randint(0, 100) < MUTATION_RATE:
+                # mutation_random(child)
+                mutation_invert(child)
 
-    population = Population(matrix, POPULATION_SIZE, next_population)
-    print(f'[{i}] Distancia: {population.get_best().distance}')
+            next_population.append(Wrapper(child))
+
+        population = Population(matrix, POPULATION_SIZE, next_population)
+        print(f'[{i}] Distancia: {population.get_best().distance}')
+
+    return population
+
+now = time.time()
+best_solution = resolve().population[0]
+
+# print(last_population.population[0].path)
+
+print(f'\n[+] Levou cerca de: {(time.time() - now):.2f}s')
+
+# view = Visualization(matrix)
+# view.solution(best_solution, 0.1)
