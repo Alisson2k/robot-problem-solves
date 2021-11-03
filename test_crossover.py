@@ -18,10 +18,10 @@ class TestCrossover(object):
         p1 = self.size - 6
         p2 = self.size - 3
 
-        res = Crossover.apply_ox(c1.genes, c2.genes, p1, p2)
+        res = Crossover.apply_ox(c1, c2, p1, p2)
 
-        assert res[p1:p2] == c1.genes[p1:p2]
-        assert list(dict.fromkeys(res)) == res
+        assert res.genes[p1:p2] == c1.genes[p1:p2]
+        assert list(dict.fromkeys(res.genes)) == res.genes
 
         print("[+] OX crossover is applied!\n")
 

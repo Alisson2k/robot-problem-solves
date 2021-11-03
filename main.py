@@ -14,7 +14,7 @@ def flatten(population, to_append):
         population.append(sublist)
 
 # Tamanho do problema (matrix)
-MATRIX_SIZE = 50
+MATRIX_SIZE = 20
 
 # Tamanho da população
 POPULATION_SIZE = 20
@@ -23,10 +23,10 @@ POPULATION_SIZE = 20
 NUMBER_OF_GENERATIONS = 500
 
 # Chance de mutação
-MUTATION_RATE = 5
+MUTATION_RATE = 10
 
 # Taxa de elitismo
-ELITISM_RATE = 20
+ELITISM_RATE = 25
 
 
 # Gera uma matriz inicial
@@ -34,35 +34,26 @@ matrix = Matrix(MATRIX_SIZE, True)
 # matrix = read_matrix_by_file('example.txt')
 
 def resolve():
-    # Gera uma população incial aleatória
     population = Population(matrix, POPULATION_SIZE)
     print(f'[*] Inicialmente: {population.get_best().distance}\n')
     print(matrix)
     print()
 
     # view = Visualization(matrix)
-    # view.solution(population.get_best(), 0.3)
+    # view.solution(population.get_best(), 0.2)
 
-    # Inicia a seleção natural
     for i in range(NUMBER_OF_GENERATIONS):
-        # Array para próxima geracao
         next_population = []
 
-        # Seleciona os melhores, elitismo
         bests = population.elitism(ELITISM_RATE)
 
-        # Joga os melhores na proxima geracao
         flatten(next_population, bests)
 
-        # Até preencher todos os "POPULATION_SIZE", seleciona
-        # dois individuos para fazer crossover
-        # gera um novo, e talvez aplica uma mutacao no gerado
         while len(next_population) != POPULATION_SIZE:
             parents = roulette_wheel(population)
             child = Crossover.apply_ox(parents[0].chromosome, parents[1].chromosome)
 
             if random.randint(0, 100) < MUTATION_RATE:
-                # mutation_random(child)
                 mutation_invert(child)
 
             next_population.append(Wrapper(child))
@@ -73,11 +64,13 @@ def resolve():
     return population
 
 now = time.time()
-best_solution = resolve().population[0]
+best_solution = resolve().get_best()
 
-# print(last_population.population[0].path)
-
+print()
+print(best_solution.path)
 print(f'\n[+] Levou cerca de: {(time.time() - now):.2f}s')
 
-# view = Visualization(matrix)
-# view.solution(best_solution, 0.1)
+input("Pressione Enter para visualizar a solucao...")
+
+view = Visualization(matrix)
+view.solution(best_solution, 0.2)

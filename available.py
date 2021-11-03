@@ -21,10 +21,6 @@ av = Available()
 def available_chromosome(chromosome: Chromosome):
     av.set_default_props()
 
-    points = []
-    for i in range(len(chromosome.genes)):
-        points.append(chromosome.points_sorted[chromosome.genes[i]])
-
     total_path = []
     for gen in chromosome.genes:
         ini = chromosome.robot_position
